@@ -8,17 +8,33 @@ interface Message {
   content: string;
 }
 
+interface ChatSession {
+  id: string;
+  title: string;
+  messages: Message[];
+}
+
+const DEFAULT_MESSAGE: Message = {
+  id: '1',
+  role: 'bot',
+  content: 'Halo! Saya adalah asisten AI Anda. Ada yang bisa saya bantu terkait dokumen yang Anda miliki?'
+};
+
 export const ChatInterface: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([
+  const [sessions, setSessions] = useState<ChatSession[]>([
     {
-      id: '1',
-      role: 'bot',
-      content: 'Halo! Saya adalah asisten AI Anda. Ada yang bisa saya bantu terkait dokumen yang Anda miliki?'
+      id: Date.now().toString(),
+      title: 'Chat Baru',
+      messages: [DEFAULT_MESSAGE]
     }
   ]);
+  const [activeSessionId, setActiveSessionId] = useState<string>(sessions[0].id);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
+  const messages = activeSession.messages;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -27,6 +43,37 @@ export const ChatInterface: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
+
+  const updateActiveSessionMessages = (newMessages: Message[]) => {
+    setSessions(prev => prev.map(s => {
+      if (s.id === activeSessionId) {
+        let newTitle = s.title;
+        // Jika ini adalah pesan pertama dari user, jadikan sebagai judul chat
+        if (s.title === 'Chat Baru' && newMessages.length > 1) {
+           const firstUser = newMessages.find(m => m.role === 'user');
+           if (firstUser) {
+             newTitle = firstUser.content.substring(0, 25);
+             if (firstUser.content.length > 25) newTitle += '...';
+           }
+        }
+        return { ...s, title: newTitle, messages: newMessages };
+      }
+      return s;
+    }));
+  };
+
+  const handleNewChat = () => {
+    // Jangan buat baru jika chat saat ini masih kosong (hanya berisi sapaan)
+    if (messages.length === 1 && messages[0].id === '1') return;
+
+    const newSession: ChatSession = {
+      id: Date.now().toString(),
+      title: 'Chat Baru',
+      messages: [DEFAULT_MESSAGE]
+    };
+    setSessions([newSession, ...sessions]);
+    setActiveSessionId(newSession.id);
+  };
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -37,12 +84,12 @@ export const ChatInterface: React.FC = () => {
       content: inputValue
     };
 
-    setMessages(prev => [...prev, newUserMsg]);
+    const updatedMessages = [...messages, newUserMsg];
+    updateActiveSessionMessages(updatedMessages);
     setInputValue('');
     setIsTyping(true);
 
-    // Persiapkan history chat untuk dikirim (ambil 5 chat terakhir agar konteks tidak terlalu berat)
-    const historyToSend = messages.slice(-5).map(m => ({
+    const historyToSend = updatedMessages.slice(-6, -1).map(m => ({
       role: m.role,
       content: m.content
     }));
@@ -54,7 +101,7 @@ export const ChatInterface: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          question: inputValue,
+          question: newUserMsg.content,
           history: historyToSend
         }),
       });
@@ -70,7 +117,7 @@ export const ChatInterface: React.FC = () => {
         role: 'bot',
         content: data.answer || "Maaf, respon kosong dari AI."
       };
-      setMessages(prev => [...prev, newBotMsg]);
+      updateActiveSessionMessages([...updatedMessages, newBotMsg]);
     } catch (error) {
       console.error('Error fetching chat:', error);
       const errorMsg: Message = {
@@ -78,7 +125,7 @@ export const ChatInterface: React.FC = () => {
         role: 'bot',
         content: 'Maaf, terjadi kesalahan atau server RAG belum menyala. Pastikan backend (main.py) sudah dijalankan.'
       };
-      setMessages(prev => [...prev, errorMsg]);
+      updateActiveSessionMessages([...updatedMessages, errorMsg]);
     } finally {
       setIsTyping(false);
     }
@@ -95,16 +142,21 @@ export const ChatInterface: React.FC = () => {
     <div className="app-container">
       {/* Sidebar Kiri */}
       <aside className="sidebar">
-        <button className="sidebar-new-chat" onClick={() => setMessages([])}>
+        <button className="sidebar-new-chat" onClick={handleNewChat}>
           <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
           Chat Baru
         </button>
         
         <div className="sidebar-history">
-          {/* History Dummy */}
-          <div className="history-item">Penjelasan dokumen RAG</div>
-          <div className="history-item">Analisis performa model</div>
-          <div className="history-item">Pertanyaan tentang BAB 1</div>
+          {sessions.map(session => (
+            <div 
+              key={session.id} 
+              className={`history-item ${session.id === activeSessionId ? 'active' : ''}`}
+              onClick={() => setActiveSessionId(session.id)}
+            >
+              {session.title}
+            </div>
+          ))}
         </div>
       </aside>
 
