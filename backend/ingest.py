@@ -4,9 +4,10 @@ import time
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from rag import process_and_store_document, DB_DIR, CHUNKS_PKL_PATH
+from rag import process_docs, DB_DIR, CHUNKS_PKL_PATH
 
-MODUL_DIR = r"D:\Collage\6th Term\NLP\tbp-004-010\modul"
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODUL_DIR = os.path.join(root_dir, "modul")
 
 def main():
     print("-----")
@@ -46,7 +47,7 @@ def main():
         
         file_start = time.time()
         try:
-            msg = process_and_store_document(file_path)
+            msg = process_docs(file_path)
             file_end = time.time()
             print(f"  -> Sukses! {msg} (Durasi: {file_end - file_start:.2f} detik)")
         except Exception as e:

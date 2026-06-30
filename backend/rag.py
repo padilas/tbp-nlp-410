@@ -117,9 +117,9 @@ def get_embeddings():
 class HybridRetriever(BaseRetriever):
     vector_retriever: Any = Field(description="The FAISS vector store retriever")
     bm25_retriever: Any = Field(description="The BM25 keyword retriever")
-    weight_vector: float = Field(default=0.8, description="Weight for vector search")
-    weight_bm25: float = Field(default=0.2, description="Weight for BM25 search")
-    top_k: int = Field(default=5, description="Number of documents to return")
+    weight_vector: float = 0.8
+    weight_bm25: float = 0.2
+    top_k: int = 5
 
     def _get_relevant_documents(
         self, query: str, *, run_manager: CallbackManagerForRetrieverRun
