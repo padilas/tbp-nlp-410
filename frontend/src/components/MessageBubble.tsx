@@ -5,9 +5,10 @@ interface MessageBubbleProps {
   role: 'user' | 'bot';
   content: string;
   isTyping?: boolean;
+  sources?: { file: string; page: number }[];
 }
 
-export const MessageBubble: React.FC<MessageBubbleProps> = ({ role, content, isTyping }) => {
+export const MessageBubble: React.FC<MessageBubbleProps> = ({ role, content, isTyping, sources }) => {
   return (
     <div className={`message-wrapper ${role}`}>
       <div className="message-content">
@@ -22,7 +23,18 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ role, content, isT
               <div className="typing-dot"></div>
             </div>
           ) : (
-            content
+            <>
+              <div>{content}</div>
+              {sources && sources.length > 0 && (
+                <div className="source-chips-container">
+                  {sources.map((s, idx) => (
+                    <span key={idx} className="source-chip">
+                      📄 {s.file} (Hal. {s.page})
+                    </span>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
