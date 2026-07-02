@@ -187,7 +187,7 @@ def run_evaluation():
     
     retriever = get_retriever()
     if not retriever:
-        print("[WARNING] Hybrid retriever belum diinisialisasi. (Database kosong)")
+        print("[WARNING]  Retriever belum diinisialisasi dan database blm diinsisasi.")
         print("Menggunakan mock retriever (context disuntikkan secara statik untuk tujuan simulasi).")
         mock_contexts = {
             "Apa pengertian dari Kecerdasan Buatan (Artificial Intelligence)?": "Artificial Intelligence atau Kecerdasan Buatan adalah sebuah bidang ilmu komputer yang berfokus pada penciptaan mesin atau sistem komputer yang mampu meniru kemampuan intelektual dan cara bertindak manusia.",

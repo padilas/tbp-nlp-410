@@ -180,15 +180,15 @@ class DenseRetriever(BaseRetriever):
             
         return cleaned_docs
 
-def get_llm():
+def get_llm(max_tokens: int = 2768, streaming: bool = True):
     if LLM_PROVIDER == "openrouter" and OPENROUTER_API_KEY:
         return ChatOpenAI(
             model=OPENROUTER_MODEL,
             openai_api_key=OPENROUTER_API_KEY,
             openai_api_base="https://openrouter.ai/api/v1",
             temperature=0.0,
-            max_tokens=1024,
-            streaming=True,
+            max_tokens=max_tokens,
+            streaming=streaming,
             default_headers={
                 "HTTP-Referer": "http://localhost:3000",
                 "X-Title": "Academic QA Bot"
@@ -199,7 +199,7 @@ def get_llm():
             base_url=OLLAMA_HOST,
             model=OLLAMA_MODEL,
             temperature=0.0,
-            streaming=True
+            streaming=streaming
         )
 
 def process_docs(file_path: str) -> str:

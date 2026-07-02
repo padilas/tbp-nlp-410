@@ -1,0 +1,56 @@
+[
+    {
+        "timestamp": "2026-07-02 19:38:02",
+        "configuration": {
+            "llm_provider": "openrouter",
+            "llm_model": "gemini-2.5-flash",
+            "retrieval_approach": "Hybrid",
+            "top_k": 5,
+            "chunk_size": 1000,
+            "chunk_overlap": 200,
+            "embedding_model": "intfloat/multilingual-e5-base"
+        },
+        "ragas_metrics": {
+            "faithfulness": 0.879,
+            "answer_relevancy": 0.8638,
+            "context_precision": 0.6289,
+            "context_recall": 0.8788
+        }
+    },
+    {
+        "timestamp": "2026-07-02 19:39:45",
+        "configuration": {
+            "llm_provider": "openrouter",
+            "llm_model": "gemini-2.5-flash",
+            "retrieval_approach": "Dense",
+            "top_k": 5,
+            "chunk_size": 1000,
+            "chunk_overlap": 200,
+            "embedding_model": "intfloat/multilingual-e5-base"
+        },
+        "ragas_metrics": {
+            "faithfulness": 0.8817,
+            "answer_relevancy": 0.7699,
+            "context_precision": 0.6182,
+            "context_recall": 0.8788
+        }
+    },
+    {
+        "timestamp": "2026-07-02 19:48:59",
+        "configuration": {
+            "llm_provider": "openrouter",
+            "llm_model": "gpt-oss-20b:free",
+            "retrieval_approach": "Hybrid",
+            "top_k": 5,
+            "chunk_size": 1000,
+            "chunk_overlap": 200,
+            "embedding_model": "intfloat/multilingual-e5-base"
+        },
+        "ragas_metrics": {
+            "faithfulness": 0.6667,
+            "answer_relevancy": 0.8868,
+            "context_precision": 0.95,
+            "context_recall": 0.7778
+        }
+    }
+]
