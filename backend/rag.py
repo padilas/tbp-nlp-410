@@ -107,16 +107,23 @@ def clean_text(text: str) -> str:
     return result
 
 def get_embeddings():
-    return HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL_NAME,
-        model_kwargs={"device": "cpu"},
-        encode_kwargs={"normalize_embeddings": True}
-    )
+    try:
+        return HuggingFaceEmbeddings(
+            model_name=EMBEDDING_MODEL_NAME,
+            model_kwargs={"device": "cpu", "local_files_only": True},
+            encode_kwargs={"normalize_embeddings": True}
+        )
+    except Exception:
+        return HuggingFaceEmbeddings(
+            model_name=EMBEDDING_MODEL_NAME,
+            model_kwargs={"device": "cpu"},
+            encode_kwargs={"normalize_embeddings": True}
+        )
 
 # RRF Hybrid Retriever pakai FAISS untuk dense dan BM25 untuk sparse (keyword)
 class HybridRetriever(BaseRetriever):
-    vector_retriever: Any = Field(description="The FAISS vector store retriever")
-    bm25_retriever: Any = Field(description="The BM25 keyword retriever")
+    vector_retriever: Any = Field(description="Dense retriever")
+    bm25_retriever: Any = Field(description="Sparse retriever")
     weight_vector: float = 0.8
     weight_bm25: float = 0.2
     top_k: int = 5
@@ -143,6 +150,27 @@ class HybridRetriever(BaseRetriever):
 
         sorted_items = sorted(rrf_scores.values(), key=lambda x: x["score"], reverse=True)
         retrieved_docs = [item["doc"] for item in sorted_items[:self.top_k]]
+        cleaned_docs = []
+        for doc in retrieved_docs:
+            content = doc.page_content
+            if content.startswith("passage: "):
+                content = content[len("passage: "):]
+            cleaned_docs.append(Document(page_content=content, metadata=doc.metadata))
+            
+        return cleaned_docs
+
+# Dense Vector Retriever pakai FAISS
+class DenseRetriever(BaseRetriever):
+    vector_retriever: Any = Field(description="The FAISS vector store retriever")
+    top_k: int = 5
+
+    def _get_relevant_documents(
+        self, query: str, *, run_manager: CallbackManagerForRetrieverRun
+    ) -> List[Document]:
+        vector_query = f"query: {query}"
+        vector_docs = self.vector_retriever.invoke(vector_query)
+
+        retrieved_docs = vector_docs[:self.top_k]
         cleaned_docs = []
         for doc in retrieved_docs:
             content = doc.page_content
@@ -193,7 +221,7 @@ def process_docs(file_path: str) -> str:
                 os.remove(file_path)
             except Exception:
                 pass
-        raise ValueError("Dokumen yang diunggah tidak berkaitan dengan topik Kecerdasan Buatan.")
+        raise ValueError("Dokumen modul tidak berkaitan dengan topik Kecerdasan Buatan.")
         
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNK_SIZE,
@@ -205,15 +233,18 @@ def process_docs(file_path: str) -> str:
         chunk.page_content = f"passage: {chunk.page_content}"
     
     # update faiss db
-    embeddings = get_embeddings()
-    if os.path.exists(os.path.join(DB_DIR, "index.faiss")):
-        vectorstore = FAISS.load_local(DB_DIR, embeddings, allow_dangerous_deserialization=True)
-        vectorstore.add_documents(chunks)
-    else:
-        vectorstore = FAISS.from_documents(chunks, embeddings)
+    try:
+        embeddings = get_embeddings()
+        if os.path.exists(os.path.join(DB_DIR, "index.faiss")):
+            vectorstore = FAISS.load_local(DB_DIR, embeddings, allow_dangerous_deserialization=True)
+            vectorstore.add_documents(chunks)
+        else:
+            vectorstore = FAISS.from_documents(chunks, embeddings)
+    except Exception as e:
+        raise RuntimeError(f"Gagal memuat embeddings untuk proses ingest: {e}") from e
     vectorstore.save_local(DB_DIR)
     
-    # update chunks pkl (untuk bm25 atau retriever yg sparse)
+    # update chunks pkl
     existing_chunks = []
     if os.path.exists(CHUNKS_PKL_PATH):
         try:
@@ -228,13 +259,13 @@ def process_docs(file_path: str) -> str:
         
     return f"Successfully processed {len(chunks)} chunks from the document. \nSaved to FAISS and BM25 store."
 
-def get_retriever():
-    embeddings = get_embeddings()
+def get_hybrid_retriever():
     has_faiss = os.path.exists(os.path.join(DB_DIR, "index.faiss"))
     has_pkl = os.path.exists(CHUNKS_PKL_PATH)
     
     if has_faiss and has_pkl:
         try:
+            embeddings = get_embeddings()
             vectorstore = FAISS.load_local(DB_DIR, embeddings, allow_dangerous_deserialization=True)
             vector_retriever = vectorstore.as_retriever(search_kwargs={"k": 10})
             with open(CHUNKS_PKL_PATH, "rb") as f:
@@ -248,9 +279,33 @@ def get_retriever():
                 top_k=5
             )
         except Exception as e:
-            print(f"[Error loading retrievers: {e}]")
+            print(f"[Error loading hybrid retriever: {e}]")
             return None
     return None
+
+def get_dense_retriever():
+    has_faiss = os.path.exists(os.path.join(DB_DIR, "index.faiss"))
+    
+    if has_faiss:
+        try:
+            embeddings = get_embeddings()
+            vectorstore = FAISS.load_local(DB_DIR, embeddings, allow_dangerous_deserialization=True)
+            vector_retriever = vectorstore.as_retriever(search_kwargs={"k": 10})
+            return DenseRetriever(
+                vector_retriever=vector_retriever,
+                top_k=5
+            )
+        except Exception as e:
+            print(f"[Error loading dense retriever: {e}]")
+            return None
+    return None
+
+def get_retriever():
+    RETRIEVAL_TYPE = os.getenv("RETRIEVAL_TYPE", "hybrid").lower()
+    if RETRIEVAL_TYPE == "dense":
+        return get_dense_retriever()
+    else:
+        return get_hybrid_retriever()
 
 # prompt
 ACADEMIC_PROMPT_TEMPLATE = """Role: Anda adalah Asisten Buku Modul AI SMP/SMA (AI Textbook Bot) yang bertindak sebagai ahli materi pembelajaran berdasarkan modul Kecerdasan Buatan (AI) yang diunggah. Tugas Anda adalah membantu siswa memahami konsep, materi bab, dan teori yang dibahas dalam dokumen dengan ramah, komunikatif, profesional, dan akurat.

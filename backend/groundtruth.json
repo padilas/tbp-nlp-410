@@ -1,0 +1,68 @@
+[
+    {
+        "question": "Apa pengertian dari Kecerdasan Buatan (Artificial Intelligence)?",
+        "ground_truth_keywords": ["kecerdasan buatan", "artificial intelligence", "ilmu komputer", "komputer", "meniru", "bahasa alami", "pembelajaran mesin", "machine learning"],
+        "ground_truth_answer": " Artificial Intelligence atau Kecerdasan Buatan adalah sebuah bidang ilmu komputer yang berfokus pada penciptaan mesin atau sistem komputer yang mampu meniru kemampuan intelektual dan cara bertindak manusia.",
+        "ground_truth_answer_2": " AI sebagai kemampuan suatu sistem untuk menafsirkan data eksternal dengan benar, belajar dari data tersebut, dan menggunakan pembelajaran itu untuk mencapai tujuan dan tugas tertentu."
+    },
+    {
+        "question": "Apa tujuan pengembangan AI?",
+        "ground_truth_keywords": ["tujuan", "pengembangan", "AI", "kecerdasan buatan", "otomatisasi", "efisiensi", "pemecahan masalah", "pembelajaran mesin"],
+        "ground_truth_answer": "Tujuan pengembangan AI adalah untuk menciptakan sistem yang mampu meniru kemampuan intelektual manusia, meningkatkan efisiensi dan produktivitas, serta memecahkan masalah kompleks yang sulit diselesaikan oleh manusia secara manual.",
+        "ground_truth_answer_2": "Meniru berbagai aktivitas kognitif manusia, seperti kemampuan belajar, melakukan penalaran logis, mengambil keputusan berdasarkan analisis, dan bahkan melakukan koreksi diri untuk memperbaiki kesalahan."
+    },
+    {
+        "question": "Darimana asal jawaban yang diberikan AI?",
+        "ground_truth_keywords": ["AI", "jawaban", "sumber", "data", "informasi", "pembelajaran mesin", "model bahasa", "basis data", "big data"],
+        "ground_truth_answer": "Asal jawaban yang diberikan AI berasal dari data dan informasi yang telah digunakan untuk melatih model bahasa, serta dari basis data hingga big data yang tersedia.",
+        "ground_truth_answer_2": "Bahan bakar utama kecerdasan buatan (AI) adalah data. AI memanfaatkan data yang telah dikumpulkan atau yang telah dimiliki, untuk mempelajari pola, membuat prediksi, dan memberikan jawaban berdasarkan informasi yang telah dipelajari."
+    },
+    {
+        "question": "Apa saja jenis-jenis Machine Learning?",
+        "ground_truth_keywords": ["jenis", "machine learning", "pembelajaran mesin", "supervised learning", "unsupervised learning", "reinforcement learning", "semi-supervised learning"],
+        "ground_truth_answer": "Jenis-jenis Machine Learning meliputi Supervised Learning, Unsupervised Learning, dan Reinforcement Learning.",
+        "ground_truth_answer_2": "Machine Learning terbagi menjadi beberapa jenis, yaitu Supervised Learning (pembelajaran dari data yang telah memiliki label atau kategori), Unsupervised Learning (pembelajaran dari data yang tidak memiliki label atau kategori), dan Reinforcement Learning (pembelajaran melalui interaksi dengan lingkungan untuk memaksimalkan reward)."
+    },
+    {
+        "question": "Bagaimana etika dan hukum tentang penggunaan Kecerdasan Buatan (AI)?",
+        "ground_truth_keywords": ["AI", "etika", "hukum", "penggunaan", "kecerdasan buatan", "responsibilitas", "privasi", "keamanan"],
+        "ground_truth_answer": "Etika dan hukum tentang penggunaan Kecerdasan Buatan (AI) mencakup aspek-aspek seperti responsibilitas pengembang dan pengguna AI, privasi data, keamanan informasi, serta dampak sosial dari penerapan AI.",
+        "ground_truth_answer_2": "Penggunaan Kecerdasan Buatan (AI) memerlukan pertimbangan etika dan hukum yang ketat. Ini mencakup isu-isu seperti responsibilitas dalam pengambilan keputusan oleh AI, perlindungan data pribadi, dan memastikan bahwa AI digunakan secara bertanggung jawab dan etis."
+    },
+    {
+        "question": "Apakah Kecerdasan Buatan (AI) berbahaya?",
+        "ground_truth_keywords": ["AI", "berbahaya", "risiko", "penggunaan", "kecerdasan buatan", "etika", "hukum"],
+        "ground_truth_answer": "Kecerdasan Buatan (AI) bisa berbahaya jika tidak digunakan secara bertanggung jawab. Risiko potensial mencakup masalah privasi, bias, dan dampak sosial dari penerapan AI.",
+        "ground_truth_answer_2": "Penggunaan Kecerdasan Buatan (AI) memerlukan pengawasan dan regulasi yang ketat untuk memastikan bahwa AI digunakan secara etis dan tidak menimbulkan risiko yang signifikan bagi individu atau masyarakat. AI Seperti halnya pisau yang bisa digunakan untuk memasak dan melukai, teknologi AI bisa membawa manfaat besar sekaligus ririko, tergantung bagaimana cara menggunakannya."
+    },
+    {
+        "question": "Apa itu privasi data?",
+        "ground_truth_keywords": ["AI", "privasi data", "informasi pribadi", "perlindungan data", "penggunaan data", "kebijakan privasi"],
+        "ground_truth_answer": "Privasi data berarti melindungi informasi pribadi kita, seperti nama, alamat, lokasi, hobi, dan bahkan kebiasaan browsing. Ini penting karena AI sering mengumpulkan data dari pengguna. Jika tidak dijaga, data ini bisa bocor atau disalahgunakan, misalnya dijual tanpa izin. ",
+        "ground_truth_answer_2": "Privasi data adalah hak individu untuk mengontrol informasi pribadi mereka. Dalam penggunaan Kecerdasan Buatan (AI), perlindungan data pribadi menjadi sangat penting untuk memastikan bahwa individu tidak kehilangan kontrol atas informasi mereka dan bahwa data tersebut digunakan secara etis dan bertanggung jawab."
+    },
+    {
+        "question": "Apa itu algoritma?",
+        "ground_truth_keywords": ["AI", "algoritma", "pembelajaran mesin", "proses", "penyelesaian masalah"],
+        "ground_truth_answer": "Algoritma adalah serangkaian langkah-langkah yang digunakan untuk menyelesaikan suatu masalah atau melakukan tugas tertentu. Dalam konteks Kecerdasan Buatan (AI), algoritma digunakan untuk memproses data dan membuat keputusan berdasarkan pola yang ditemukan.",
+        "ground_truth_answer_2": "Algoritma adalah urutan instruksi yang digunakan untuk menyelesaikan masalah atau mencapai tujuan tertentu. Dalam Kecerdasan Buatan (AI), algoritma merupakan dasar dari sistem AI yang memungkinkan mereka untuk belajar dari data dan membuat prediksi atau keputusan."
+    },
+    {
+        "question": "Apa hubungan kecerdasan buatan (AI) dengan machine learning (ML)?",
+        "ground_truth_keywords": ["AI", "machine learning", "pembelajaran mesin", "algoritma", "data"],
+        "ground_truth_answer": "Kecerdasan Buatan (AI) adalah bidang yang lebih luas yang mencakup berbagai teknik untuk membuat mesin dapat berpikir dan bertindak seperti manusia. Machine Learning (ML) adalah salah satu pendekatan utama dalam AI yang fokus pada pengembangan algoritma yang memungkinkan mesin untuk belajar dari data dan membuat prediksi atau keputusan.",
+        "ground_truth_answer_2": "Machine Learning (ML) adalah subdomain dari Kecerdasan Buatan (AI) yang berfokus pada pengembangan algoritma dan model yang memungkinkan komputer untuk belajar dari data dan membuat keputusan atau prediksi tanpa instruksi eksplisit. ML merupakan salah satu teknologi inti di balik banyak aplikasi AI modern."
+    },
+    {
+        "question": "Bagaimana cara kecerdasan buatan (AI) belajar dari data?",
+        "ground_truth_keywords": ["AI", "machine learning", "pembelajaran mesin", "algoritma", "data"],
+        "ground_truth_answer": "AI belajar dari pola. Dengan menggunakan algoritma pembelajaran mesin, AI menganalisis data yang diberikan, menemukan pola atau hubungan di dalamnya, dan kemudian menggunakan informasi tersebut untuk membuat prediksi atau keputusan di masa depan.",
+        "ground_truth_answer_2": "AI tidak benar-benar memahami gambar atau suara, tetapi ia dapat mengenali pola dalam data. Dengan algoritma pembelajaran mesin, AI memproses data, menemukan pola, dan menggunakan pola tersebut untuk membuat prediksi atau keputusan. Semakin banyak data yang diberikan, semakin baik AI dalam mengenali pola dan membuat keputusan yang akurat."
+    },
+    {
+        "question": "Bagaimana contoh cara AI belajar",
+        "ground_truth_keywords": ["AI", "machine learning", "pembelajaran mesin", "algoritma", "data"],
+        "ground_truth_answer": "Ketika kita memasukkan gambar ke dalam sistem AI seperti Teachable Machine, AI tidak melihat gambar kucing seperti kita. Yang ia lihat adalah kumpulan angka—dalam bentuk piksel, warna, kontras, dan sebagainya. Begitu juga dengan suara—bukan mendengar melodi, tapi membaca gelombang suara sebagai data numerik.",
+        "ground_truth_answer_2": " jika kita memberi AI 100 gambar kucing dan melabelinya sebagai kucing, AI akan mencoba mengenali pola-pola umum yang sering muncul di gambar tersebut. Jika kemudian diberi gambar baru, AI akan menebak: “Apakah pola ini mirip dengan yang saya pelajari sebagai 'kucing'?” Jika iya, maka ia akan mengklasifikasikannya begitu."
+    }
+]

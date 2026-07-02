@@ -6,19 +6,16 @@ from typing import List
 from rag import create_rag_chain, get_retriever
 
 app = FastAPI()
-
-# Konfigurasi CORS agar frontend React bisa memanggil API ini
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], # URL Vite default
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Definisi struktur data request dari frontend
 class ChatMessage(BaseModel):
-    role: str # "user" atau "bot"
+    role: str
     content: str
 
 class ChatRequest(BaseModel):
@@ -40,7 +37,7 @@ def chat_endpoint(req: ChatRequest):
     # 2. Ambil dokumen relevan
     retriever = get_retriever()
     if not retriever:
-        return {"answer": "Error: Database dokumen belum siap atau dokumen belum diproses (retriever gagal diload)."}
+        return {"answer": "Error: Database dokumen belum siap atau dokumen belum diproses."}
 
     docs = retriever.invoke(req.question)
     context = "\n\n".join([doc.page_content for doc in docs])
@@ -51,9 +48,6 @@ def chat_endpoint(req: ChatRequest):
         return {"answer": "Error: Gagal memuat model AI atau RAG chain."}
 
     try:
-        # Panggil AI (menunggu stream selesai dan kumpulkan sebagai string)
-        # Catatan: Walaupun model diset streaming=True di rag.py, 
-        # metode .invoke() akan mengumpulkan semua stream hingga selesai dan mengembalikan teks utuh.
         response = chain.invoke({
             "context": context,
             "chat_history": history_str,
