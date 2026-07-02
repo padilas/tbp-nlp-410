@@ -6,6 +6,7 @@ interface Message {
   id: string;
   role: 'user' | 'bot';
   content: string;
+  sources?: { file: string; page: number }[];
 }
 
 interface ChatSession {
@@ -115,7 +116,8 @@ export const ChatInterface: React.FC = () => {
       const newBotMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: 'bot',
-        content: data.answer || "Maaf, respon kosong dari AI."
+        content: data.answer || "Maaf, respon kosong dari AI.",
+        sources: data.sources
       };
       updateActiveSessionMessages([...updatedMessages, newBotMsg]);
     } catch (error) {
@@ -167,7 +169,7 @@ export const ChatInterface: React.FC = () => {
         
         <div className="chat-messages">
           {messages.map((msg) => (
-            <MessageBubble key={msg.id} role={msg.role} content={msg.content} />
+            <MessageBubble key={msg.id} role={msg.role} content={msg.content} sources={msg.sources} />
           ))}
           {isTyping && <MessageBubble role="bot" content="" isTyping={true} />}
           <div ref={messagesEndRef} />

@@ -1,9 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import os
 from typing import List
 
 from rag import create_rag_chain, get_retriever
+from guardrails import is_safe_query
 
 app = FastAPI()
 app.add_middleware(
@@ -28,6 +30,11 @@ def read_root():
 
 @app.post("/api/chat")
 def chat_endpoint(req: ChatRequest):
+    # 0. Validasi keamanan pertanyaan (Guardrails)
+    is_safe, warning_msg = is_safe_query(req.question)
+    if not is_safe:
+        return {"answer": warning_msg}
+
     # 1. Format history menjadi string
     history_str = ""
     for msg in req.history:
@@ -42,6 +49,17 @@ def chat_endpoint(req: ChatRequest):
     docs = retriever.invoke(req.question)
     context = "\n\n".join([doc.page_content for doc in docs])
 
+    # Ekstrak metadata source
+    extracted_sources = []
+    seen = set()
+    for doc in docs:
+        source_name = os.path.basename(doc.metadata.get("source", "Unknown"))
+        page = doc.metadata.get("page", 0) + 1
+        identifier = f"{source_name}_{page}"
+        if identifier not in seen:
+            seen.add(identifier)
+            extracted_sources.append({"file": source_name, "page": page})
+
     # 3. Jalankan chain RAG
     chain = create_rag_chain()
     if not chain:
@@ -53,7 +71,7 @@ def chat_endpoint(req: ChatRequest):
             "chat_history": history_str,
             "question": req.question
         })
-        return {"answer": response}
+        return {"answer": response, "sources": extracted_sources}
     except Exception as e:
         return {"answer": f"Terjadi kesalahan saat memproses jawaban: {str(e)}"}
 
