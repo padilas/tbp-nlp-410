@@ -24,6 +24,9 @@ class ChatRequest(BaseModel):
     question: str
     history: List[ChatMessage] = []
 
+class AdminRetrieveRequest(BaseModel):
+    query: str
+
 @app.get("/")
 def read_root():
     return {"message": "RAG Backend is running. Access /api/chat via POST."}
@@ -74,6 +77,42 @@ def chat_endpoint(req: ChatRequest):
         return {"answer": response, "sources": extracted_sources}
     except Exception as e:
         return {"answer": f"Terjadi kesalahan saat memproses jawaban: {str(e)}"}
+
+@app.get("/api/admin/config")
+def admin_config():
+    import rag
+    return {
+        "llm_provider": rag.LLM_PROVIDER,
+        "openrouter_model": rag.OPENROUTER_MODEL,
+        "ollama_model": rag.OLLAMA_MODEL,
+        "chunk_size": rag.CHUNK_SIZE,
+        "chunk_overlap": rag.CHUNK_OVERLAP,
+        "embedding_model": rag.EMBEDDING_MODEL_NAME,
+        "vector_weight": 0.8, # dari class HybridRetriever default
+        "bm25_weight": 0.2
+    }
+
+@app.post("/api/admin/retrieve")
+def admin_retrieve(req: AdminRetrieveRequest):
+    retriever = get_retriever()
+    if not retriever:
+        raise HTTPException(status_code=500, detail="Database belum siap.")
+    
+    docs = retriever.invoke(req.query)
+    results = []
+    for rank, doc in enumerate(docs, 1):
+        content = doc.page_content
+        # bersihkan prefix 'passage: ' jika ada
+        if content.startswith("passage: "):
+            content = content[len("passage: "):]
+            
+        results.append({
+            "rank": rank,
+            "source": os.path.basename(doc.metadata.get("source", "Unknown")),
+            "page": doc.metadata.get("page", 0) + 1,
+            "content": content
+        })
+    return {"results": results}
 
 if __name__ == "__main__":
     import uvicorn
