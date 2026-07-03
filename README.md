@@ -2,9 +2,6 @@
 
 Proyek ini adalah ekosistem aplikasi asisten tanya jawab akademik (*Academic QA Bot*) berbasis *Retrieval-Augmented Generation* (RAG) untuk membantu siswa tingkat SMP/SMA mempelajari materi Kecerdasan Buatan (Artificial Intelligence).
 
-Seluruh draf laporan akademik formal yang komprehensif, mendalam, dan menjawab secara detail 10 rubrik penilaian Tugas Besar Pemrograman (TBP) serta UTS NLP telah disusun pada berkas:
-👉 **[laporan_tbp.md](file:///D:/Collage/6th%20Term/NLP/tbp-004-010/tbp-nlp-410/laporan_tbp.md)**
-
 ---
 
 ## 📂 Struktur Direktori Proyek
@@ -15,6 +12,7 @@ Seluruh draf laporan akademik formal yang komprehensif, mendalam, dan menjawab s
     *   **[guardrails.py](file:///D:/Collage/6th%20Term/NLP/tbp-004-010/tbp-nlp-410/backend/guardrails.py)**: Modul filter keamanan query siswa (Prompt Injection, kasar, SARA, kecurangan akademis).
     *   **[ingest.py](file:///D:/Collage/6th%20Term/NLP/tbp-004-010/tbp-nlp-410/backend/ingest.py)**: Script offline untuk memproses buku modul PDF ke Vector Database FAISS.
     *   **[evaluator.py](file:///D:/Collage/6th%20Term/NLP/tbp-004-010/tbp-nlp-410/backend/evaluator.py)**: Script evaluasi kuantitatif otomatis (ROUGE-L, BERTScore, Hit Rate, MRR, Faithfulness).
+    *   **[ragas_evaluator.py](file:///D:/Collage/6th%20Term/NLP/tbp-004-010/tbp-nlp-410/backend/ragas_evaluator.py)**: Script evaluasi kualitatif otomatis (Faithfulness, Answeer Relevancy, Context Recall & Precision).
     *   **[test_retrieval.py](file:///D:/Collage/6th%20Term/NLP/tbp-004-010/tbp-nlp-410/backend/test_retrieval.py)**: Script terminal interaktif untuk menguji relevansi retrieval.
 *   **`frontend/`**: Aplikasi client antarmuka chatting interaktif berbasis React + Vite (TypeScript + Vanilla CSS).
     *   **[ChatInterface.tsx](file:///D:/Collage/6th%20Term/NLP/tbp-004-010/tbp-nlp-410/frontend/src/components/ChatInterface.tsx)**: Komponen antarmuka chat dengan manajemen multi-percakapan.
@@ -57,6 +55,7 @@ Seluruh draf laporan akademik formal yang komprehensif, mendalam, dan menjawab s
 Untuk memverifikasi metrik ROUGE, BERTScore, Faithfulness, Hit Rate, dan MRR secara otomatis, jalankan:
 ```bash
 cd ../backend
-python evaluator.py
+python evaluator.py # untuk kuantitatif
+python ragas_evaluator.py # untuk kualitatif
 ```
 Hasil ringkasan skor rata-rata pencarian dan jawaban model akan ditampilkan langsung di terminal Anda.
