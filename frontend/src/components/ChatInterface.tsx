@@ -193,6 +193,9 @@ export const ChatInterface: React.FC = () => {
               <Send size={16} />
             </button>
           </div>
+          <div className="privacy-disclaimer">
+            ⚠️ <strong>Perhatian:</strong> Dilarang memasukkan data pribadi atau informasi sensitif (seperti nama lengkap, NISN, dll) ke dalam chatbox. Sistem beroperasi secara anonim dan tidak menautkan riwayat percakapan dengan identitas Anda.
+          </div>
         </div>
       </main>
     </div>

@@ -277,6 +277,19 @@ body {
   align-items: center;
 }
 
+.privacy-disclaimer {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 12px;
+  padding: 0 16px;
+  line-height: 1.4;
+}
+
+.privacy-disclaimer strong {
+  color: #ef4444;
+}
+
 /* Tombol rahasia */
 .switch-view-btn {
   position: fixed;
